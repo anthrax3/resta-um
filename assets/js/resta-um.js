@@ -51,131 +51,133 @@ function play(old, move) {
      for (x = 0; x < balls.length; x++) {
          if (balls.hasOwnProperty(x)) {
              balls[x].onclick = function() {
-               var id = parseInt(this.getAttribute('id'), 10), // recupera o id do elemento clicado
-                   linha = parseInt((id-1) / 7, 10), // recupera a linha onde esta a bola
-                   idEsquerda = id - 1, // id o elemento da esquerda
-                   idDireita = id + 1, // id do elemento da direita
-                   idCima = id - 7, // id do elemento de cima
-                   idBaixo = id + 7, // id do elemento baixo
-                   
-                   // variaveis para armazenar o id dos elementos vazios
-                   linhaVazio,
-                   idEsquerdaVazio,
-                   idDireitaVazio,
-                   idCimaVazio,
-                   idBaixoVazio,
-                   mover = [];
-                
-                // quando é esquerda ou direita tem uma situação
-                // o elemento a esquerda do 8 não pode ser o 7
-                // por isto é necessário validar os ids da linha correspondente
-                idEsquerda = posicao(posicoes, linha, idEsquerda);
-                idDireita = posicao(posicoes, linha, idDireita);
-                
-                console.log(
-                    'elemento:'+id,
-                    'linha:'+linha,
-                    'esquerda:'+idEsquerda,
-                    'direita:'+idDireita,
-                    'cima:'+idCima,
-                    'baixo:'+idBaixo
-                );
-                
-                // armazena e verifica os elementos que estão a esquerda, direita, cima e baixo
-                // do elemento clicado não podendo ser vazio e o mesmo ser menor que 0 e maior que 49
-                var elEsquerda = el(idEsquerda),
-                    elDireita = el(idDireita),
-                    elCima = el(idCima),
-                    elBaixo = el(idBaixo),
+                if (this.classList.contains('ball')) {
+                   var id = parseInt(this.getAttribute('id'), 10), // recupera o id do elemento clicado
+                       linha = parseInt((id-1) / 7, 10), // recupera a linha onde esta a bola
+                       idEsquerda = id - 1, // id o elemento da esquerda
+                       idDireita = id + 1, // id do elemento da direita
+                       idCima = id - 7, // id do elemento de cima
+                       idBaixo = id + 7, // id do elemento baixo
+                       
+                       // variaveis para armazenar o id dos elementos vazios
+                       linhaVazio,
+                       idEsquerdaVazio,
+                       idDireitaVazio,
+                       idCimaVazio,
+                       idBaixoVazio,
+                       mover = [];
                     
-                    // variaveis para armazenar as posições vazias
-                    elEsquerdaVazio,
-                    elDireitaVazio,
-                    elCimaVazio,
-                    elBaixoVazio,
-                    elRemove;
+                    // quando é esquerda ou direita tem uma situação
+                    // o elemento a esquerda do 8 não pode ser o 7
+                    // por isto é necessário validar os ids da linha correspondente
+                    idEsquerda = posicao(posicoes, linha, idEsquerda);
+                    idDireita = posicao(posicoes, linha, idDireita);
                     
-                    // se existe um elemento proximo é possível pular
-                    // agora verifica se existe um espaço vazio
-                    if (elEsquerda && elEsquerda.classList.contains('ball')) {
-                        console.log('esquerda');
-                        idEsquerdaVazio = idEsquerda - 1; // id anterior do el. da esquerda
-                        idEsquerdaVazio = posicao(posicoes, linha, idEsquerdaVazio); // posição valida do id
-                        console.log(idEsquerdaVazio);
-                        elEsquerdaVazio = el(idEsquerdaVazio); // el. vazio
-                    }
-                    if (elDireita && elDireita.classList.contains('ball')) {
-                        console.log('direita');
-                        idDireitaVazio = idDireita + 1;
-                        idDireitaVazio = posicao(posicoes, linha, idDireitaVazio); 
-                        console.log(idDireitaVazio);
-                        elDireitaVazio = el(idDireitaVazio);
-                    }
-                    if (elCima && elCima.classList.contains('ball')) {
-                        console.log('cima');
-                        idCimaVazio = idCima - 7;
-                        linhaVazio = parseInt((idCimaVazio-1) / 7, 10); // linha do elemento vazio
-                        idCimaVazio = posicao(posicoes, linhaVazio, idCimaVazio);
-                        console.log(idCimaVazio);
-                        elCimaVazio = el(idCimaVazio);
-                    }
-                    if (elBaixo && elBaixo.classList.contains('ball')) {
-                        console.log('baixo');
-                        idBaixoVazio = idBaixo + 7;
-                        linhaVazio = parseInt((idBaixoVazio-1) / 7, 10); // linha do elemento vazio
-                        idBaixoVazio = posicao(posicoes, linhaVazio, idBaixoVazio);
-                        console.log(idBaixoVazio);
-                        elBaixoVazio = el(idBaixoVazio);
-                    }
+                    console.log(
+                        'elemento:'+id,
+                        'linha:'+linha,
+                        'esquerda:'+idEsquerda,
+                        'direita:'+idDireita,
+                        'cima:'+idCima,
+                        'baixo:'+idBaixo
+                    );
                     
-                    //console.log(elEsquerdaVazio, elDireitaVazio, elCimaVazio, elBaixoVazio);
-                    
-                    // se o elemento não contem classe esta vazio
-                    if (elEsquerdaVazio && elEsquerdaVazio.classList.length == 0) {
-                        console.log(elEsquerdaVazio);
-                        mover.push({ self: this, elVazio: elEsquerdaVazio, elRemove: elEsquerda }); // adiciona no array para mover
-                    }
-                    if (elDireitaVazio && elDireitaVazio.classList.length == 0) {
-                        console.log(elDireitaVazio);
-                        mover.push({ self: this, elVazio: elDireitaVazio, elRemove: elDireita });
-                    }
-                    if (elCimaVazio && elCimaVazio.classList.length == 0) {
-                        console.log(elCimaVazio);
-                        mover.push({ self: this, elVazio: elCimaVazio, elRemove: elCima });
-                    }
-                    if (elBaixoVazio && elBaixoVazio.classList.length == 0) {
-                        console.log(elBaixoVazio);
-                        mover.push({ self: this, elVazio: elBaixoVazio, elRemove: elBaixo });
-                    }
-                    
-                    if (move.length == 0) {
-                        mover = mover;
-                    } else {
-                        if (id == old) {
-                            for (var i in move) {
-                                move[i].elVazio.className = '';
-                            }
-                            old = null;
-                            move = [];
+                    // armazena e verifica os elementos que estão a esquerda, direita, cima e baixo
+                    // do elemento clicado não podendo ser vazio e o mesmo ser menor que 0 e maior que 49
+                    var elEsquerda = el(idEsquerda),
+                        elDireita = el(idDireita),
+                        elCima = el(idCima),
+                        elBaixo = el(idBaixo),
+                        
+                        // variaveis para armazenar as posições vazias
+                        elEsquerdaVazio,
+                        elDireitaVazio,
+                        elCimaVazio,
+                        elBaixoVazio,
+                        elRemove;
+                        
+                        // se existe um elemento proximo é possível pular
+                        // agora verifica se existe um espaço vazio
+                        if (elEsquerda && elEsquerda.classList.contains('ball')) {
+                            console.log('esquerda');
+                            idEsquerdaVazio = idEsquerda - 1; // id anterior do el. da esquerda
+                            idEsquerdaVazio = posicao(posicoes, linha, idEsquerdaVazio); // posição valida do id
+                            console.log(idEsquerdaVazio);
+                            elEsquerdaVazio = el(idEsquerdaVazio); // el. vazio
+                        }
+                        if (elDireita && elDireita.classList.contains('ball')) {
+                            console.log('direita');
+                            idDireitaVazio = idDireita + 1;
+                            idDireitaVazio = posicao(posicoes, linha, idDireitaVazio); 
+                            console.log(idDireitaVazio);
+                            elDireitaVazio = el(idDireitaVazio);
+                        }
+                        if (elCima && elCima.classList.contains('ball')) {
+                            console.log('cima');
+                            idCimaVazio = idCima - 7;
+                            linhaVazio = parseInt((idCimaVazio-1) / 7, 10); // linha do elemento vazio
+                            idCimaVazio = posicao(posicoes, linhaVazio, idCimaVazio);
+                            console.log(idCimaVazio);
+                            elCimaVazio = el(idCimaVazio);
+                        }
+                        if (elBaixo && elBaixo.classList.contains('ball')) {
+                            console.log('baixo');
+                            idBaixoVazio = idBaixo + 7;
+                            linhaVazio = parseInt((idBaixoVazio-1) / 7, 10); // linha do elemento vazio
+                            idBaixoVazio = posicao(posicoes, linhaVazio, idBaixoVazio);
+                            console.log(idBaixoVazio);
+                            elBaixoVazio = el(idBaixoVazio);
+                        }
+                        
+                        //console.log(elEsquerdaVazio, elDireitaVazio, elCimaVazio, elBaixoVazio);
+                        
+                        // se o elemento não contem classe esta vazio
+                        if (elEsquerdaVazio && elEsquerdaVazio.classList.length == 0) {
+                            console.log(elEsquerdaVazio);
+                            mover.push({ self: this, elVazio: elEsquerdaVazio, elRemove: elEsquerda }); // adiciona no array para mover
+                        }
+                        if (elDireitaVazio && elDireitaVazio.classList.length == 0) {
+                            console.log(elDireitaVazio);
+                            mover.push({ self: this, elVazio: elDireitaVazio, elRemove: elDireita });
+                        }
+                        if (elCimaVazio && elCimaVazio.classList.length == 0) {
+                            console.log(elCimaVazio);
+                            mover.push({ self: this, elVazio: elCimaVazio, elRemove: elCima });
+                        }
+                        if (elBaixoVazio && elBaixoVazio.classList.length == 0) {
+                            console.log(elBaixoVazio);
+                            mover.push({ self: this, elVazio: elBaixoVazio, elRemove: elBaixo });
+                        }
+                        
+                        if (move.length == 0) {
+                            mover = mover;
                         } else {
-                            mover = [];
+                            if (id == old) {
+                                for (var i in move) {
+                                    move[i].elVazio.className = '';
+                                }
+                                old = null;
+                                move = [];
+                            } else {
+                                mover = [];
+                            }
                         }
-                    }
-                    // se existir somente um movimento
-                    if (mover.length == 1) {
-                        mover[0].self.className = '';
-                        mover[0].elVazio.className = 'ball';
-                        mover[0].elRemove.className = '';
-                        play(); // executa novamento para os elementos vazios que passaram para ball
-                        
-                    // se existir mais de um movimento
-                    } else if (mover.length > 1) {
-                        for (var i in mover) {
-                            mover[i].elVazio.className += ' move';
+                        // se existir somente um movimento
+                        if (mover.length == 1) {
+                            mover[0].self.className = '';
+                            mover[0].elVazio.className = 'ball';
+                            mover[0].elRemove.className = '';
+                            play(); // executa novamento para os elementos vazios que passaram para ball
+                            
+                        // se existir mais de um movimento
+                        } else if (mover.length > 1) {
+                            for (var i in mover) {
+                                mover[i].elVazio.className += ' move';
+                            }
+                            
+                            play(id, mover); // executa novamento para os elementos vazios que passaram para ball
                         }
-                        
-                        play(id, mover); // executa novamento para os elementos vazios que passaram para ball
-                    }
+                }
             };
          }
      }
@@ -188,23 +190,28 @@ function play(old, move) {
      for (x = 0; x < move.length; x++) {
         if (move.hasOwnProperty(x)) {
             move[x].elVazio.onclick = function() {
-                var id = parseInt(this.getAttribute('id'), 10); // recupera o id do elemento clicado
-                for (y = 0; y < move.length; y++) {
-                    if (move.hasOwnProperty(y)) {
-                        if (move[y].elVazio.id == id) {
-                            move[y].self.className = '';
-                            move[y].elVazio.className = 'ball';
-                            move[y].elRemove.className = '';
-                            movido = true;
-                        } else {
-                            move[y].elVazio.className = '';
+                if (this.classList.contains('move')) {
+                    var id = parseInt(this.getAttribute('id'), 10); // recupera o id do elemento clicado
+                    for (y = 0; y < move.length; y++) {
+                        if (move.hasOwnProperty(y)) {
+                            if (move[y].elVazio.id == id) {
+                                move[y].self.className = '';
+                                move[y].elVazio.className = 'ball';
+                                move[y].elRemove.className = '';
+                                movido = true;
+                            } else {
+                                move[y].elVazio.className = '';
+                            }
                         }
+                    }
+                    // reseta variável que controla os movimentos das bolas amarelas
+                    if (movido) {
+                        play([]);
                     }
                 }
             }
          }
      }
-     move = movido ? [] : move;
 };
 
 play();
