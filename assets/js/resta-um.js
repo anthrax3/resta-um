@@ -34,6 +34,7 @@ function play(old, move) {
          y,
          // retorna todos os elementos com a classe ball
          balls = document.getElementsByClassName('ball'),
+         resta = document.getElementById('resta'),
          // posições validas para movimento
          posicoes = [
                   [ 3, 4, 5],
@@ -47,6 +48,7 @@ function play(old, move) {
          old = old || null,
          move = move || [];
      
+     resta.innerHTML = balls.length;
      if (balls.length == 1) {
          alert('Parabéns você ganhou!');
      } else {
